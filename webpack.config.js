@@ -12,14 +12,17 @@ module.exports = {
   // nós excluímos todas as dependências
   externals: [nodeExternals()],
   mode: slsw.lib.webpack.isLocal ? "development" : "production",
+
   optimization: {
     // Não queremos minimizar nosso código por agora.
     minimize: false
   },
+
   performance: {
     // Desabilita warnings sobre o tamanho das entry points
     hints: false
   },
+
   // Executar o babel em todos arquivos .js e pular todos existentes na pasta node_modules
   module: {
     rules: [

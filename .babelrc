@@ -1,8 +1,17 @@
 {
-  "plugins": ["source-map-support", "transform-runtime"],
+  "plugins": [
+    "source-map-support",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread"
+  ],
   "presets": [
-    ["env", {
-      "node": "10"
-    }], "stage-3"
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "10"
+        }
+      }
+    ]
   ]
 }
