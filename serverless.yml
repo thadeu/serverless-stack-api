@@ -1,0 +1,39 @@
+# NOTE: update this with your service name
+service: api
+
+# Create an optimized package for our functions
+package:
+  individually: true
+
+plugins:
+  - serverless-webpack # webpack transpile
+  - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+  - serverless-dotenv-plugin # Load .env as environment variables
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: us-east-1
+  #environment:
+  #  SAMPLE_ENV_VAR: ${env:SAMPLE_ENV_VAR}
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: v1/hello
+          method: get
+  hola:
+    handler: handler.hola
+    events:
+      - http:
+          path: v1/hola
+          method: get
