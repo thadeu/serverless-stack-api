@@ -2,7 +2,15 @@
   "plugins": [
     "source-map-support",
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-object-rest-spread"
+    "@babel/plugin-proposal-object-rest-spread",
+    ["module-resolver", {
+      "root": ["./"],
+      "alias": {
+        "@lib": "./lib",
+        "@mocks": "./mocks",
+        "@tests": "./tests"
+      }
+    }]
   ],
   "presets": [
     [

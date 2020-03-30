@@ -6,33 +6,95 @@ package:
   individually: true
 
 plugins:
-  - serverless-webpack # webpack transpile
+  - serverless-webpack
   - serverless-offline
-  - serverless-dotenv-plugin # Load .env as environment variables
+  - serverless-dotenv-plugin
 
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
 
+# Create our resources with separate CloudFormation templates
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+
 provider:
   name: aws
   runtime: nodejs10.x
   stage: dev
   region: us-east-1
-  #environment:
-  #  SAMPLE_ENV_VAR: ${env:SAMPLE_ENV_VAR}
+  environment:
+    tableName: notes
+    stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
 
 functions:
-  hello:
-    handler: handler.hello
+  create:
+    handler: notes/create.main
     events:
       - http:
-          path: v1/hello
-          method: get
-  hola:
-    handler: handler.hola
+          path: v1/notes
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  get:
+    handler: notes/get.main
     events:
       - http:
-          path: v1/hola
+          path: v1/notes/{id}
           method: get
+          cors: true
+          authorizer: aws_iam
+
+  list:
+    handler: notes/list.main
+    events:
+      - http:
+          path: v1/notes
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  update:
+    handler: notes/update.main
+    events:
+      - http:
+          path: v1/notes/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+
+  delete:
+    handler: notes/delete.main
+    events:
+      - http:
+          path: v1/notes/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
+  billing:
+    # Defines an HTTP API endpoint that calls the main function in billing.js
+    # - path: url path is /billing
+    # - method: POST request
+    handler: notes/billing.main
+    events:
+      - http:
+          path: notes/billing
+          method: post
+          cors: true
+          authorizer: aws_iam
