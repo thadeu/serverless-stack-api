@@ -29,7 +29,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "jest": "^25.2.4",
     "serverless-dotenv-plugin": "^2.1.1",
-    "serverless-offline": "^5.3.3",
+    "serverless-offline": "^12.0.3",
     "serverless-webpack": "^5.3.1",
     "transform-runtime": "^0.0.0",
     "webpack": "^4.42.1",
